@@ -2,12 +2,25 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>my-weather-app</title>
+    <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
+
+    <form class="weatherForm">
+      <input type="text" class="cityInput" placeholder="Enter city name" />
+      <button type="submit">Get weather</button>
+    </form>
+
+    <div class="card">
+      <h1 class="cityDisplay">Miami</h1>
+      <p class="temDisplay">90°F</p>
+      <p class="humDisplay">Humidity: 75%</p>
+      <p class="condDisplay">Clear Skies</p>
+      <p class="iconDisplay">☀️</p>
+      <p class="msgDisplay">Please enter a city</p>
+    </div>
+    <script src="/src/main.js"></script>
   </body>
 </html>
