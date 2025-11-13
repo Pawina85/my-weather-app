@@ -20,6 +20,8 @@ weatherForm.addEventListener("submit", async (event) => {
     
     if (city) {
         try {
+           // Show loading state
+           displayLoading();
            const weatherData = await getWeatherData(city);
            displayWeather(weatherData);
         } catch (error) {
@@ -75,6 +77,13 @@ function displayWeather(data) {
     `;
     
     // Show the card
+    card.style.display = "flex";
+}
+
+function displayLoading() {
+    card.innerHTML = `
+        <p class="loadingDisplay">⏳ Loading weather data...</p>
+    `;
     card.style.display = "flex";
 }
 
