@@ -4,7 +4,7 @@ const apiKey = "256fe6798e64376d68df8988cf59c598"; // Your OpenWeatherMap API ke
 console.log("🚀 Script loaded successfully!");
 
 // Get DOM elements
-const weatherForm = document.querySelector(".weatherForm");
+const weatherForm = document.querySelector(".search-form");
 const cityInput = document.querySelector(".cityInput");
 const card = document.querySelector(".card");
 
@@ -53,8 +53,9 @@ async function getWeatherData(city) {
        return {
            city: data.name,
            temperature: Math.round(data.main.temp) + "°C",
+           feelsLike: Math.round(data.main.feels_like) + "°C",
            humidity: data.main.humidity + "%",
-           condition: data.weather[0].main,
+           condition: data.weather[0].description,
            icon: getweatherEmoji(data.weather[0].main)
        };
    } catch (error) {
@@ -69,40 +70,52 @@ function displayWeather(data) {
     
     // Create weather display elements
     card.innerHTML = `
+        <div class="iconDisplay">${data.icon}</div>
         <h1 class="cityDisplay">${data.city}</h1>
-        <p class="temDisplay">${data.temperature}</p>
-        <p class="humDisplay">Humidity: ${data.humidity}</p>
-        <p class="condDisplay">${data.condition}</p>
-        <p class="iconDisplay">${data.icon}</p>
+        <div class="temDisplay">${data.temperature}</div>
+        <div class="condDisplay">${data.condition}</div>
+        <div class="weather-details">
+            <div class="weather-detail">
+                <span class="detail-label">Humidity</span>
+                <span class="detail-value">${data.humidity}</span>
+            </div>
+            <div class="weather-detail">
+                <span class="detail-label">Feels Like</span>
+                <span class="detail-value">${data.feelsLike || data.temperature}</span>
+            </div>
+        </div>
     `;
     
     // Show the card
-    card.style.display = "flex";
+    card.style.display = "block";
 }
 
 function displayLoading() {
     card.innerHTML = `
-        <p class="loadingDisplay">⏳ Loading weather data...</p>
+        <div class="loadingDisplay">
+            <span>☁️</span>
+            <span>Getting weather...</span>
+        </div>
     `;
-    card.style.display = "flex";
+    card.style.display = "block";
 }
 
 function getweatherEmoji (condition){
-    // Return emoji based on weather condition
+    // Return clear, simple emoji based on weather condition
     const conditionLower = condition.toLowerCase();
     if (conditionLower.includes("sunny") || conditionLower.includes("clear")) return "☀️";
     if (conditionLower.includes("cloud")) return "☁️";
-    if (conditionLower.includes("rain")) return "🌧️";
+    if (conditionLower.includes("rain") || conditionLower.includes("drizzle")) return "🌧️";
     if (conditionLower.includes("snow")) return "❄️";
-    if (conditionLower.includes("storm")) return "⛈️";
-    return "🌤️"; // Default
+    if (conditionLower.includes("storm") || conditionLower.includes("thunder")) return "⛈️";
+    if (conditionLower.includes("mist") || conditionLower.includes("fog")) return "🌫️";
+    return "🌤️"; // Default partly cloudy
 }
 function displayError(message) {
-    const errorDisplay = document.createElement("p");
-    errorDisplay.textContent = message;
-    errorDisplay.classList.add("errorDisplay");
-
-    card.textContent = ""; // Clear previous content
-    card.style.display = "flex";
-    card.appendChild(errorDisplay);
+    card.innerHTML = `
+        <div class="errorDisplay">
+            ❌ ${message}
+        </div>
+    `;
+    card.style.display = "block";
 }
